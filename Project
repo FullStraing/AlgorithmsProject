@@ -1,0 +1,92 @@
+import matplotlib.pyplot as plt
+cities = ["Bishkek", "Osh", "Jalal-Abad", "Karakol", "Naryn", "Talas", "Batken", "Tokmok", "Kochkor", "Isfana"]
+paths = [
+    ("Bishkek", "Osh", 200),
+    ("Bishkek", "Jalal-Abad", 100),
+    ("Osh", "Karakol", 290),
+    ("Jalal-Abad", "Naryn", 150),
+    ("Karakol", "Naryn", 400),
+    ("Karakol", "Talas", 340),
+    ("Naryn", "Batken", 260),
+    ("Talas", "Batken", 500),
+    ("Batken", "Tokmok", 430),
+    ("Tokmok", "Kochkor", 230),
+    ("Kochkor", "Isfana", 380),
+    ("Bishkek", "Isfana", 150),
+    ("Osh", "Kochkor", 120),
+    ("Jalal-Abad", "Tokmok", 210),
+    ("Talas", "Isfana", 140),
+]
+def puti(cities, paths):
+    print("Возможные пути:")
+    for i in paths:
+        print(f"Путь от: {i[0]} -----> до {i[1]}, расстояние между городами {i[2]}")
+    print()
+    
+def bfs(cities,paths,start,end):
+    visited = set()
+    q =[(start,[start],0)] 
+    while q:
+        cur,p, tot= q.pop(0)
+        if cur==end:
+            return p,tot
+        visited.add(cur)
+        for i in paths:
+            if i[0]== cur and i[1] not in visited:
+                q.append((i[1], p + [i[1]],tot +i[2]))
+            elif i[1] ==cur and i[0] not in visited:
+                q.append((i[0],p +[i[0]], tot+i[2]))
+    return None, None
+    
+print("Приветствуем!")
+print("Перед вами карта городов и их пути:")
+puti(cities,paths)
+while True:
+    print("Опции:")
+    print("1. Найти кратчайший путь")
+    print("2. Добавить город")
+    print("3. Добавить путь между городами")
+    print("4. Возможные пути")
+    print("5. Получите кратчайшие пути из одного города во все остальные")
+    print("6. Выход")
+    choice = input("Выберите одну из опций (1-6): ")
+    if choice=='1':
+        start= input("Из какого года хотите начать?: ")
+        end =input("Введите конечный город: ")
+        if start in cities and end in cities:
+            p ,d = bfs(cities,paths,start, end)
+            if p:
+                print(f"Самый короткий путь от {start} до {end} пути {p} с расстоянием {d}.")
+            else:
+                print("Невозможно попасть в этот город.")
+        else:
+            print("Один из городов не существует в приложении.")
+
+    elif choice == '2':
+        new_city = input("Введите название города: ")
+        if new_city in cities:
+            print("Город уже существует.")
+        else:
+            cities.append(new_city)
+            print(f"Город {new_city} был успешно добавлен.")
+
+    elif choice == '3':
+        city1 = input("Первый город: ")
+        city2 = input("Второй город: ")
+        d = int(input("Дистанция между городами: "))
+        if city1 in cities and city2 in cities:
+            paths.append((city1, city2, d))
+            print(f"Путь от {city1} до {city2} с расстоянием {d} был успешно добавлен.")
+        else:
+            print("Одного или более введенных городов несуществует.")
+
+    elif choice == '4':
+        print("Возможные пути::")
+        puti(cities, paths)
+            
+    elif choice == '6':
+        print("До встречи!")
+        break
+    else:
+        print("Неправильный ввод. Повторите попытку.")
+
